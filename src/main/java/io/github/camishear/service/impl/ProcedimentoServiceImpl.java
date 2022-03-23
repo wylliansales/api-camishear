@@ -3,17 +3,16 @@ package io.github.camishear.service.impl;
 import io.github.camishear.domain.entity.Procedimento;
 import io.github.camishear.domain.repository.ProcedimentoRepository;
 import io.github.camishear.service.ProcedimentoService;
-import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -34,9 +33,9 @@ public class ProcedimentoServiceImpl implements ProcedimentoService {
     }
 
     @Override
-    public List<Procedimento> pesquisar(String nome, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return procedimentoRepository.findAll();
+    public Page<Procedimento> pesquisar(String nome, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "nome");
+        return procedimentoRepository.findAll(pageable);
     }
 
     @Override

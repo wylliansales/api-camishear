@@ -1,8 +1,7 @@
 package io.github.camishear.service;
 
 import io.github.camishear.domain.entity.Procedimento;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ProcedimentoService {
     /**
@@ -19,7 +18,7 @@ public interface ProcedimentoService {
      * @param size
      * @return
      */
-    List<Procedimento> pesquisar(String nome, int page, int size);
+    Page<Procedimento> pesquisar(String nome, int page, int size);
 
     /**
      * Atualiza o procedimento conforme os parametros de entrada

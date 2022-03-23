@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -22,13 +23,13 @@ import javax.validation.constraints.NotEmpty;
 @ApiModel(description = "Estrutura padrão para retorno de pesquisa os procedimento com paginação")
 public class ProcedimentoListRequestDto {
 
-    @ApiModelProperty(value = "Número da página", example = "1", required = true)
-    @NotEmpty(message = "O numero da página é obrigatório")
+    @ApiModelProperty(value = "Número da página", example = "0", required = true)
+    @NotNull(message = "O numero da página é obrigatório")
     @Min(0)
     private int page;
 
     @ApiModelProperty(value = "Numero de itens por pagina", example = "10", required = true)
-    @NotEmpty(message = "Quantidade de itens por página pecisa ser definido")
+    @NotNull(message = "Quantidade de itens por página pecisa ser definido")
     private int size;
 
     @ApiModelProperty(value = "Nome do procedimento", example = "selagem")

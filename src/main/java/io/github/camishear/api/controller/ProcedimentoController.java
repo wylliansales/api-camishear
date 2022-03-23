@@ -1,34 +1,40 @@
 package io.github.camishear.api.controller;
 
+import ch.qos.logback.core.pattern.Converter;
 import io.github.camishear.api.dto.prodecimento.ProcedimentoListRequestDto;
 import io.github.camishear.api.dto.prodecimento.ProcedimentoListResponseDto;
 import io.github.camishear.api.dto.prodecimento.ProcedimentoSalvarRequestDto;
 import io.github.camishear.domain.entity.Procedimento;
 import io.github.camishear.service.ProcedimentoService;
 import io.swagger.annotations.*;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/procedimentos")
-@Api("API contento os endpoints de Prodecimentos")
+@Api("API contendo os endpoints de Prodecimentos")
 public class ProcedimentoController {
 
     private final ProcedimentoService procedimentoService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("EndPoint responsável por salvar o procedimento")
+    @ApiOperation(value = "EndPoint responsável por salvar o procedimento")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Procedimento cadastrado com sucesso"),
-            @ApiResponse(code = 400, message = "Procedimento não cadastrado, dados inválidos", response = Error.class)
+            @ApiResponse(code = 400, message = "Procedimento não cadastrado, dados inválidos", response = Error.class),
+            @ApiResponse(code = 401, message = "not authorized!"),
+            @ApiResponse(code = 403, message = "forbidden!!!"),
+            @ApiResponse(code = 404, message = "not found!!!")
     })
     public void salvarProcecimento(@RequestBody @Valid ProcedimentoSalvarRequestDto dto) {
         Procedimento procedimento = Procedimento
@@ -42,13 +48,13 @@ public class ProcedimentoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation("EndPoint responsável por atualizar o procedimento")
+    @ApiOperation(value = "EndPoint responsável por atualizar o procedimento")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Procedimento foi atualizado"),
             @ApiResponse(code = 404, message = "Procedimento não foi encontrado")
     })
     public void atualizarProcedimento(
-            @ApiParam("Id do procedimento") @PathVariable Integer id,
+            @ApiParam(value = "Id do procedimento", example = "1") @PathVariable Integer id,
             @RequestBody ProcedimentoSalvarRequestDto dto
     ) {
         Procedimento procedimento = Procedimento
@@ -64,16 +70,20 @@ public class ProcedimentoController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("EndPoint que lista os procedimentos")
-    public List<ProcedimentoListResponseDto> listarProcedimentos(
-            @RequestParam ProcedimentoListRequestDto dto
+    public Page<ProcedimentoListResponseDto> listarProcedimentos(
+            @Valid ProcedimentoListRequestDto dto
             ) {
-        List<Procedimento> procedimentos =  procedimentoService
+        Page<Procedimento> procedimentos =  procedimentoService
                 .pesquisar(dto.getNome(), dto.getPage(), dto.getSize());
 
-        return procedimentos
-                .stream()
-                .map(procedimento -> converterToProcedimento(procedimento))
-                .collect(Collectors.toList());
+        return procedimentos.map( p -> {
+            return ProcedimentoListResponseDto.builder()
+                    .id(p.getId())
+                    .nome(p.getNome())
+                    .valor(p.getValor())
+                    .comissao(p.getComissao())
+                    .build();
+        });
     }
 
     private ProcedimentoListResponseDto converterToProcedimento(Procedimento procedimento) {
