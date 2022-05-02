@@ -1,7 +1,8 @@
-package io.github.camishear.domain.repository;
+package io.github.camishear.repository;
 
-import io.github.camishear.domain.entity.Procedimento;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import io.github.camishear.repository.entity.Procedimento;
 
 public interface ProcedimentoRepository extends JpaRepository<Procedimento, Integer> {
 }

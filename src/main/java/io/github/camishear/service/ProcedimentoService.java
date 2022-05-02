@@ -1,15 +1,18 @@
 package io.github.camishear.service;
 
-import io.github.camishear.domain.entity.Procedimento;
 import org.springframework.data.domain.Page;
 
+import io.github.camishear.dto.prodecimento.ProcedimentoSalvarRequestDto;
+import io.github.camishear.repository.entity.Procedimento;
+
 public interface ProcedimentoService {
+
     /**
      * Realiza o cadastro do procedimento.
-     * @param procedimento
+     * @param procedimentoSalvarRequestDto
      * @return
      */
-    Procedimento salvar(Procedimento procedimento);
+    Procedimento salvar(ProcedimentoSalvarRequestDto procedimentoSalvarRequestDto);
 
     /**
      * Listar os procedimento paginada, realiza o filtro pelo nome.
@@ -21,10 +24,17 @@ public interface ProcedimentoService {
     Page<Procedimento> pesquisar(String nome, int page, int size);
 
     /**
-     * Atualiza o procedimento conforme os parametros de entrada
-     * @param procedimento
+     *  Atualiza o procedimento conforme os parametros de entrada
+     * @param id
+     * @param procedimentoSalvarRequestDto
      * @return
      */
-    Procedimento atualizar(Procedimento procedimento);
-
+    Procedimento atualizar(Integer id, ProcedimentoSalvarRequestDto procedimentoSalvarRequestDto);
+    
+    /**
+     * Buscar procedimento por id
+     * @param id
+     * @return
+     */
+    Procedimento buscarPorId(Integer id);
 }
