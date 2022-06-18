@@ -3,13 +3,10 @@ package io.github.camishear.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import io.github.camishear.repository.entity.Atendimento;
 
-@Service
 public interface AtendimentoService {
-  
+
     /**
      * Cadastra o atendimento na base de dados
      * @param atendimento
@@ -26,5 +23,5 @@ public interface AtendimentoService {
      */
     Optional<List<Atendimento>> listar(Atendimento atendimento, int size, int page);
 
-    
+
 }
